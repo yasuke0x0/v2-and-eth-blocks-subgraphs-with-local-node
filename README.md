@@ -1,6 +1,6 @@
 # Uniswap V2 Subgraph
 
-The goal is to index emitted events of the uniswap factory contract with a subgraph in a local graph node. This is a good example for a [new chain integration](https://thegraph.com/docs/en/new-chain-integration/) if a [network is not supported](https://thegraph.com/docs/en/developing/supported-networks/) by [The graph](https://thegraph.com/);
+The goal is to use a subgraph in a local Graph Node to index events emitted by the Uniswap Factory contract. This serves as a great example of how to integrate a new blockchain network that isn't yet supported by The Graph.
 
 This subgraph dynamically tracks any pair created by the uniswap factory. It tracks of the current state of Uniswap contracts, and contains derived stats for things like historical data and USD prices.
 
@@ -10,52 +10,70 @@ This subgraph dynamically tracks any pair created by the uniswap factory. It tra
 - data on liquidity providers
 - historical data on Uniswap, pairs or tokens, aggregated by day
 
-## Set up
 
-### ENV Vars
-The Graph CLI does not natively support environment variable interpolation.
-That's why we must perform the replacements manually
-* subgraph.yaml: replace dataSources.source.address prop value by the factory contract address
-* src/mappings/helpers.ts: Replace const FACTORY_ADDRESS by the factory contract address
-* graph-node/docker-compose.yml:
-  * Replace services.graph-node.environment.(postgres_user | postgres_pass | postgres_db) props values with a custom DB user & pwd
-  * Replace services.graph-node.environment.ethereum with your custom RPC URL. Replace it like this: 'mainnet:REPLACE_THIS_PLACEHOLDER_WITH_THE_RPC_URL'
-  * replace services.postgres.environment.(POSTGRES_USER | POSTGRES_PASSWORD) with the same user & pwd of the first point.
+## 🚀 Set Up
 
-### Start a dockerized local node
-First, let's check if everything is installed before proceeding with docker-compose
+### 🔐 Environment Variables (ENV Vars)
+The Graph CLI does not natively support environment variable interpolation. You'll need to manually update the required files:
+
+1. **Update Contract Address:**
+  - `subgraph.yaml`: Replace `dataSources.source.address` with the factory contract address.
+  - `src/mappings/helpers.ts`: Replace the `FACTORY_ADDRESS` constant with the factory contract address.
+
+2. **Graph Node Configuration:**
+  - In `graph-node/docker-compose.yml`, update:
+    - `services.graph-node.environment.postgres_user`, `postgres_pass`, and `postgres_db`: Set custom database username and password.
+    - `services.graph-node.environment.ethereum`: Replace `mainnet:REPLACE_THIS_PLACEHOLDER_WITH_THE_RPC_URL` with your custom RPC URL.
+    - `services.postgres.environment.POSTGRES_USER` and `POSTGRES_PASSWORD`: Use the same database username and password as above.
+
+---
+
+### 🚒 Start a Dockerized Local Node
+
+#### 1. Check Dependencies
+Ensure everything is installed by running the script:
 ```bash
 ./graph-node/check.sh
 ```
-Install images & launch the node container (IPFS + DB + Graph Protocol)
+
+#### 2. Start Docker Containers
+Install Docker images and launch the containers for IPFS, Postgres, and the Graph Node:
 ```bash
 docker-compose -f ./graph-node/docker-compose.yml up
 ```
 
-Wait till ipfs, postgres & graph-node containers are deployed before executing the next queries.
+Wait for the `ipfs`, `postgres`, and `graph-node` containers to deploy before proceeding to the next steps.
 
+---
 
-### Generate types based on schema
+### 🔧 Generate Types Based on Schema
+Generate TypeScript types based on your GraphQL schema:
 ```bash
 yarn run codegen
 ```
 
-### Create the subgraph
+---
+
+### 🎨 Create the Subgraph
+Create the subgraph locally:
 ```bash
 yarn run create-local
 ```
 
-Expected result from docker
+#### Expected Output from Docker:
 ```
-graph-node-1  | Dec 14 21:10:56.167 INFO Received subgraph_create request, params: SubgraphCreateParams { name: SubgraphName("uniswap-v2") }, component: JsonRpcServe
+graph-node-1  | Dec 14 21:10:56.167 INFO Received subgraph_create request, params: SubgraphCreateParams { name: SubgraphName("uniswap-v2") }, component: JsonRpcServer
 ```
 
-### Deploy the subgraph in the local node
+---
+
+### 📢 Deploy the Subgraph to the Local Node
+Deploy the subgraph:
 ```bash
 yarn run deploy-local
 ```
 
-Expected result from command
+#### Expected CLI Output:
 ```
 Build completed: QmQKjuhi2ott8Yjn1BRrYFBR5iw8A72dGMZrKHkGdjoTo1
 
@@ -65,11 +83,20 @@ Subgraph endpoints:
 Queries (HTTP):     http://localhost:8000/subgraphs/name/uniswap-v2
 ```
 
-Expected result from docker
+#### Expected Docker Logs:
 ```
 graph-node-1  | Dec 14 21:48:17.291 INFO Received subgraph_deploy request, params: SubgraphDeployParams { name: SubgraphName("uniswap-v2"), ipfs_hash: DeploymentHash("QmQKjuhi2ott8Yjn1BRrYFBR5iw8A72dGMZrKHkGdjoTo1"), node_id: None, debug_fork: None, history_blocks: None }, component: JsonRpcServer
 graph-node-1  | Dec 14 21:48:17.988 INFO Set subgraph start block, block: Some(#429834 (4d7f61f146762bd0ee03f68c4e8c3393f4950eded2b745d0f2ea3f9ca4e22ece)), sgd: 0, subgraph_id: QmQKjuhi2ott8Yjn1BRrYFBR5iw8A72dGMZrKHkGdjoTo1, component: SubgraphRegistrar
 ```
+
+---
+
+### ✨ You're All Set!
+Your local Graph Node is now running and indexing the Uniswap Factory contract. You can query your subgraph at:
+```plaintext
+http://localhost:8000/subgraphs/name/uniswap-v2
+```
+
 
 
 ## Key Entity Overviews
