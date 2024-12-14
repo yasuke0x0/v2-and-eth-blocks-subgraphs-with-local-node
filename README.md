@@ -17,7 +17,9 @@ This subgraph dynamically tracks any pair created by the uniswap factory. It tra
 The Graph CLI does not natively support environment variable interpolation. You'll need to manually update the required files:
 
 1. **Update Contract Address:**
-  - `subgraph.yaml`: Replace `dataSources.source.address` with the factory contract address.
+  - `subgraph.yaml`: 
+    - Replace `dataSources.source.address` with the factory contract address.
+    - Replace `dataSources.source.startBlock` with the factory contract start block (creation block).
   - `src/mappings/helpers.ts`: Replace the `FACTORY_ADDRESS` constant with the factory contract address.
 
 2. **Graph Node Configuration:**
@@ -45,6 +47,11 @@ docker-compose -f ./graph-node/docker-compose.yml up
 Wait for the `ipfs`, `postgres`, and `graph-node` containers to deploy before proceeding to the next steps.
 
 ---
+
+### Install graph-cli dependencies
+```bash
+yarn install
+```
 
 ### 🔧 Generate Types Based on Schema
 Generate TypeScript types based on your GraphQL schema:
@@ -97,6 +104,14 @@ Your local Graph Node is now running and indexing the Uniswap Factory contract. 
 http://localhost:8000/subgraphs/name/uniswap-v2
 ```
 
+
+Remember, after deployment, the data will not be available immediately. You must wait for blockchain indexing to complete. The Graph needs to process and insert all contract-emitted events into its local database before the data becomes accessible.
+
+Here’s an example of blockchain scan output in a Docker environment:
+```
+graph-node-1  | Dec 14 22:19:55.434 INFO Scanned blocks [558946, 560945], range_size: 2000, sgd: 1, subgraph_id: QmQKjuhi2ott8Yjn1BRrYFBR5iw8A72dGMZrKHkGdjoTo1, component: BlockStream
+```
+This output shows the progress of The Graph node syncing with the blockchain, including the number of processed blocks and events. You can monitor this log to track when the data is fully indexed and ready for use.
 
 
 ## Key Entity Overviews
