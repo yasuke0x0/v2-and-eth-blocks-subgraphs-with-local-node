@@ -1,4 +1,4 @@
-# Uniswap V2 Subgraph & ETH Blocks
+# Uniswap V2 & ETH Blocks Subgraphs
 
 The goal is to deploy and utilize both subgraphs within a local Graph Node setup: one for indexing events emitted by the Uniswap Factory contract and another for indexing all mined blocks of the
 blockchain.
