@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "codegen": "graph codegen --output-dir src/types/",
+    "create-local": "graph create --node http://localhost:8020/ eth-blocks",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eth-blocks",
+    "remove-local": "rm -rf build/ & rm -rf src/types & graph remove --node http://localhost:8020 eth-blocks",
+    "lint": "eslint . --ext .ts --fix"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.64.1",
+    "@graphprotocol/graph-ts": "^0.32.0"
+  }
+}
