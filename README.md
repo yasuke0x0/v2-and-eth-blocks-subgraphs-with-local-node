@@ -122,6 +122,15 @@ yarn --cwd ./graph-cli/v2-subgraph run deploy-local
 #### Expected CLI Output:
 
 ```
+Build completed: QmcTdzvj7FRkj3mGgAVgHbEk5RWget1F1ta9YdNZ3SWahK
+
+Deployed to http://localhost:8000/subgraphs/name/eth-blocks/graphql
+
+Subgraph endpoints:
+Queries (HTTP):     http://localhost:8000/subgraphs/name/eth-blocks
+```
+
+```
 Build completed: QmQKjuhi2ott8Yjn1BRrYFBR5iw8A72dGMZrKHkGdjoTo1
 
 Deployed to http://localhost:8000/subgraphs/name/uniswap-v2/graphql
@@ -141,10 +150,14 @@ graph-node-1  | Dec 14 21:48:17.988 INFO Set subgraph start block, block: Some(#
 
 ### ✨ You're All Set!
 
-Your local Graph Node is now running and indexing the Uniswap Factory contract. You can query your subgraph at:
+Your local Graph Node is now running and indexing the Uniswap Factory and ETH blocks. You can query your subgraphs at:
 
 ```plaintext
 http://localhost:8000/subgraphs/name/uniswap-v2
+```
+
+```plaintext
+http://localhost:8000/subgraphs/name/eth-blocks
 ```
 
 Remember, after deployment, the data will not be available immediately. You must wait for blockchain indexing to complete. The Graph needs to process and insert all contract-emitted events into its
