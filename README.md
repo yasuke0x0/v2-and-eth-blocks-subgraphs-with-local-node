@@ -237,7 +237,9 @@ This query fetches aggredated data from all uniswap pairs and tokens, to give a 
 }
 ```
 
-This query get data about the first 10 blocks 
+### Querying Block Data
+
+This query gets data of the first 10 blocks 
 ```graphql
 {
     blocks(first: 10) {
