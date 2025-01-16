@@ -27,7 +27,9 @@ The Graph CLI does not natively support environment variable interpolation. You'
     - Replace `dataSources.source.address` with the factory contract address.
     - Replace `dataSources.source.startBlock` with the factory contract start block (creation block).
 - `src/mappings/helpers.ts`: Replace the `FACTORY_ADDRESS` constant with the factory contract address.
-
+- `src/mappings/pricing.ts`: 
+  - In WHITELIST constant. Keep the stable coins addresses you want and replace addresses
+  - Replace WETH_ADDRESS, DAI_WETH_PAIR, USDC_WETH_PAIR, USDT_WETH_PAIR addresses
 2. **Graph Node Configuration:**
 
 - In `graph-node/docker-compose.yml`, update:
@@ -36,6 +38,12 @@ The Graph CLI does not natively support environment variable interpolation. You'
     - `services.postgres.environment.POSTGRES_USER` and `POSTGRES_PASSWORD`: Use the same database username and password as above.
 
 ---
+
+### (Optional) Fork EVM for performance
+Create a local testnet node for deploying and testing smart contracts using [anvil](https://book.getfoundry.sh/reference/anvil/).
+```bash
+anvil --fork-url https://solo-testnet.rpc.caldera.xyz/http --fork-block-number 3571368 --accounts 10 --balance 1000 --chain-id 690023441 --block-time 3
+```
 
 ### 🚒 Start a Dockerized Local Node
 

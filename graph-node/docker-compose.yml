@@ -20,7 +20,7 @@ services:
       postgres_db: graph-node
       ipfs: 'ipfs:5001'
       GRAPH_ALLOW_NON_DETERMINISTIC_IPFS: 1
-      ethereum: 'mainnet:https://solo-testnet.rpc.caldera.xyz/http'
+      ethereum: 'mainnet:http://host.docker.internal:8545'
       GRAPH_LOG: info, error
   ipfs:
     image: ipfs/kubo:v0.17.0
