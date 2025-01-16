@@ -3,28 +3,27 @@ import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts/index'
 
 import { Bundle, Pair, Token } from '../types/schema'
 import { ADDRESS_ZERO, factoryContract, ONE_BD, UNTRACKED_PAIRS, ZERO_BD } from './helpers'
-
 const WETH_ADDRESS = '0xff37dbf9582ad8f5ade5c02da168af1c579f08b5'
-const DAI_WETH_PAIR = '0x2cfee9bcd94cf51ea9ec074b98ac82f3a227f9ee'
-const USDC_WETH_PAIR = '0x4042b2ab5d7fac85659c0566b80dd78a9eed34bb'
-const USDT_WETH_PAIR = '0x14015c0a87b041e4229d3a737e1435a3b29180e5'
+const DAI_WETH_PAIR = '0x4f9b84dc3dfae8ed13ce4fc976c722c8665872e2'
+const USDC_WETH_PAIR = '0x534834794adffac598fe9f863bccee310e7673fc'
+const USDT_WETH_PAIR = '0x2a922bab364ae25aa33d87c8fe1aa9f25a378472'
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
   let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
   let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
-  let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token1
+  let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token0
 
   // all 3 have been created
   if (daiPair !== null && usdcPair !== null && usdtPair !== null) {
-    let totalLiquidityETH = daiPair.reserve1.plus(usdcPair.reserve1).plus(usdtPair.reserve0)
+    let totalLiquidityETH = daiPair.reserve1.plus(usdcPair.reserve1).plus(usdtPair.reserve1)
     let daiWeight = daiPair.reserve1.div(totalLiquidityETH)
     let usdcWeight = usdcPair.reserve1.div(totalLiquidityETH)
-    let usdtWeight = usdtPair.reserve0.div(totalLiquidityETH)
+    let usdtWeight = usdtPair.reserve1.div(totalLiquidityETH)
     return daiPair.token0Price
       .times(daiWeight)
       .plus(usdcPair.token0Price.times(usdcWeight))
-      .plus(usdtPair.token1Price.times(usdtWeight))
+      .plus(usdtPair.token0Price.times(usdtWeight))
     // dai and USDC have been created
   } else if (daiPair !== null && usdcPair !== null) {
     let totalLiquidityETH = daiPair.reserve1.plus(usdcPair.reserve1)
@@ -42,9 +41,9 @@ export function getEthPriceInUSD(): BigDecimal {
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
   '0xFf37DbF9582AD8F5Ade5c02dA168aF1c579F08B5', // WETH
-  '0x7e33d5b3d730D400cAc6A373D997Cd720FfFEa1f', // DAI
-  '0x95045bE3996e001e71F870ee3235A5341b669DE2', // USDC
-  '0x884441d7eB3e7c3513F2e7BD9B270f9BfaD84F76', // USDT
+  '0x5FbDB2315678afecb367f032d93F642f64180aa3', // DAI
+  '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512', // USDC
+  '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0', // USDT
   // '0x0000000000085d4780b73119b644ae5ecd22b376', // TUSD
   // '0x5d3a536e4d6dbd6114cc1ead35777bab948e3643', // cDAI
   // '0x39aa39c021dfbae8fac545936693ac917d5e7563', // cUSDC
